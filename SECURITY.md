@@ -10,6 +10,16 @@
 
 No security vulnerabilities were detected by CodeQL analysis.
 
+### Dependency Vulnerabilities
+**Status:** ✅ ALL RESOLVED  
+**Last Updated:** 2026-01-28
+
+All known dependency vulnerabilities have been addressed:
+- ✅ Nodemailer updated to v7.0.11 (fixed email domain interpretation conflict CVE)
+- ✅ Nodemailer DoS vulnerability resolved (addressparser recursive calls)
+- ✅ Bcrypt updated to v6.0.1 (resolved tar-related vulnerabilities)
+- ✅ No remaining vulnerabilities in npm audit
+
 ## Security Improvements Implemented
 
 ### 1. Authentication & Password Security ✅
