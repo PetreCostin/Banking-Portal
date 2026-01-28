@@ -56,6 +56,10 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # next.js build output
 .next
@@ -67,3 +71,30 @@ typings/
 .vscode/
 
 *swp
+
+# Build directories
+dist/
+build/
+backend/dist/
+frontend/build/
+
+# TypeScript
+*.tsbuildinfo
+
+# Prisma
+backend/prisma/migrations/
+
+# Docker
+*.sql
+docker-compose.override.yml
+
+# IDE
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+.cache/
+
+# Production
+/production
