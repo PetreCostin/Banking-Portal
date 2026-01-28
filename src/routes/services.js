@@ -10,6 +10,15 @@ router.get("/transfer", (req, res) => {
 router.post("/transfer", (req, res) => {
   const account_from = accounts[req.body.from]
   const balance_from = account_from.balance;
+  
+  // Check sufficient balance
+  if (balance_from < req.body.amount) {
+    return res.render("transfer", { 
+      message: "Insufficient funds",
+      error: true 
+    });
+  }
+
   account_from.balance = balance_from - req.body.amount;
 
   const account_to = accounts[req.body.to];
