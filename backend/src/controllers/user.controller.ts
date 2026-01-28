@@ -3,6 +3,7 @@ import { body } from 'express-validator';
 import { AuthRequest } from '../middleware/auth.middleware';
 import prisma from '../config/database';
 import { hashPassword } from '../utils/auth.utils';
+import { comparePassword } from '../utils/auth.utils';
 
 export const userValidators = {
   updateProfile: [
@@ -84,7 +85,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
 
 export const changePassword = async (req: AuthRequest, res: Response) => {
   try {
-    const { newPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
@@ -94,8 +95,13 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Verify current password would go here
-    // For now, just update the password
+    // Verify current password
+    const isValidPassword = await comparePassword(currentPassword, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+
+    // Update password
     const hashedPassword = await hashPassword(newPassword);
 
     await prisma.user.update({

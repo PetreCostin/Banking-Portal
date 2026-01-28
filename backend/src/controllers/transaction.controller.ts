@@ -15,6 +15,7 @@ export const getTransactions = async (req: AuthRequest, res: Response) => {
     const accountId = req.query.accountId as string;
     const type = req.query.type as string;
 
+    // Always ensure user can only access their own transactions
     const where: any = {
       OR: [
         { fromAccount: { userId: req.userId } },
@@ -22,10 +23,15 @@ export const getTransactions = async (req: AuthRequest, res: Response) => {
       ],
     };
 
+    // Add additional filters if provided
     if (accountId) {
-      where.OR = [
-        { fromAccountId: accountId },
-        { toAccountId: accountId },
+      where.AND = [
+        {
+          OR: [
+            { fromAccountId: accountId },
+            { toAccountId: accountId },
+          ],
+        },
       ];
     }
 

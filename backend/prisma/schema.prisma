@@ -188,10 +188,9 @@ model Beneficiary {
 model Card {
   id              String      @id @default(uuid())
   accountId       String
-  cardNumber      String      @unique
+  cardNumber      String      @unique  // Note: Should be encrypted/tokenized in production
   cardType        CardType
   expiryDate      DateTime
-  cvv             String
   cardholderName  String
   status          CardStatus  @default(INACTIVE)
   spendingLimit   Decimal?    @db.Decimal(12, 2)

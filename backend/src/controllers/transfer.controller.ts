@@ -40,11 +40,6 @@ export const internalTransfer = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'Source account not found' });
     }
 
-    // Check sufficient balance
-    if (Number(fromAccount.balance) < amount) {
-      return res.status(400).json({ error: 'Insufficient balance' });
-    }
-
     // Verify to account exists
     const toAccount = await prisma.account.findUnique({
       where: { id: toAccountId },
@@ -54,8 +49,17 @@ export const internalTransfer = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'Destination account not found' });
     }
 
-    // Perform transfer in transaction
+    // Perform transfer in transaction with balance check inside
     const result = await prisma.$transaction(async (tx) => {
+      // Re-check balance inside transaction to prevent race condition
+      const currentAccount = await tx.account.findUnique({
+        where: { id: fromAccountId },
+      });
+
+      if (!currentAccount || Number(currentAccount.balance) < amount) {
+        throw new Error('Insufficient balance');
+      }
+
       // Deduct from source
       await tx.account.update({
         where: { id: fromAccountId },
@@ -114,8 +118,11 @@ export const internalTransfer = async (req: AuthRequest, res: Response) => {
       message: 'Transfer completed successfully',
       transaction: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Internal transfer error:', error);
+    if (error.message === 'Insufficient balance') {
+      return res.status(400).json({ error: 'Insufficient balance' });
+    }
     res.status(500).json({ error: 'Transfer failed' });
   }
 };

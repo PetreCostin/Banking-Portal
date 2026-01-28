@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '../store';
+import { logout } from '../store/slices/authSlice';
 import { accountService } from '../services/account.service';
 
+interface Account {
+  id: string;
+  accountNumber: string;
+  accountType: string;
+  balance: number;
+  currency: string;
+  status: string;
+}
+
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
-  const [accounts, setAccounts] = useState<any[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,6 +36,11 @@ const Dashboard: React.FC = () => {
     fetchAccounts();
   }, []);
 
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
+
   const calculateTotalBalance = () => {
     return accounts.reduce((sum, acc) => sum + Number(acc.balance), 0);
   };
@@ -37,7 +55,9 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">Welcome, {user?.firstName}</span>
-              <button className="btn-primary text-sm">Logout</button>
+              <button onClick={handleLogout} className="btn-primary text-sm">
+                Logout
+              </button>
             </div>
           </div>
         </div>

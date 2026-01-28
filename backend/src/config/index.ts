@@ -2,6 +2,20 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Validate critical security settings in production
+if (process.env.NODE_ENV === 'production') {
+  const defaultSecrets = ['default-secret-change-this', 'default-refresh-secret'];
+  const jwtSecret = process.env.JWT_SECRET || '';
+  const refreshSecret = process.env.JWT_REFRESH_SECRET || '';
+  
+  if (defaultSecrets.includes(jwtSecret) || defaultSecrets.includes(refreshSecret)) {
+    throw new Error(
+      'SECURITY ERROR: Default JWT secrets detected in production environment. ' +
+      'Please set JWT_SECRET and JWT_REFRESH_SECRET environment variables to secure values.'
+    );
+  }
+}
+
 export const config = {
   env: process.env.NODE_ENV || 'development',
   port: parseInt(process.env.BACKEND_PORT || '5000', 10),

@@ -12,6 +12,7 @@ export const generateCardNumber = (): string => {
 };
 
 export const generateCVV = (): string => {
+  // Note: CVV should never be stored. This is for display/testing only.
   return Math.floor(Math.random() * 1000).toString().padStart(3, '0');
 };
 
