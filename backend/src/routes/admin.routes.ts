@@ -7,15 +7,15 @@ const router = Router();
 router.use(authenticate);
 router.use(authorize('ADMIN', 'MANAGER'));
 
-router.get('/users', (req, res) => {
+router.get('/users', (_req, res) => {
   res.json({ users: [] });
 });
 
-router.get('/transactions', (req, res) => {
+router.get('/transactions', (_req, res) => {
   res.json({ transactions: [] });
 });
 
-router.get('/analytics', (req, res) => {
+router.get('/analytics', (_req, res) => {
   res.json({ analytics: {} });
 });
 

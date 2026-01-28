@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { config } from '../config';
 
 export const hashPassword = async (password: string): Promise<string> => {
@@ -14,15 +14,17 @@ export const comparePassword = async (
 };
 
 export const generateToken = (userId: string): string => {
-  return jwt.sign({ userId }, config.jwt.secret, {
-    expiresIn: config.jwt.expire,
-  });
+  const options: SignOptions = {
+    expiresIn: config.jwt.expire as any,
+  };
+  return jwt.sign({ userId }, config.jwt.secret, options);
 };
 
 export const generateRefreshToken = (userId: string): string => {
-  return jwt.sign({ userId }, config.jwt.refreshSecret, {
-    expiresIn: config.jwt.refreshExpire,
-  });
+  const options: SignOptions = {
+    expiresIn: config.jwt.refreshExpire as any,
+  };
+  return jwt.sign({ userId }, config.jwt.refreshSecret, options);
 };
 
 export const verifyToken = (token: string): any => {

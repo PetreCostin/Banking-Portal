@@ -84,7 +84,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
 
 export const changePassword = async (req: AuthRequest, res: Response) => {
   try {
-    const { currentPassword, newPassword } = req.body;
+    const { newPassword } = req.body;
 
     const user = await prisma.user.findUnique({
       where: { id: req.userId },

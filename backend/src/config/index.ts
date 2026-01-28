@@ -9,8 +9,8 @@ export const config = {
   jwt: {
     secret: process.env.JWT_SECRET || 'default-secret-change-this',
     refreshSecret: process.env.JWT_REFRESH_SECRET || 'default-refresh-secret',
-    expire: process.env.JWT_EXPIRE || '15m',
-    refreshExpire: process.env.JWT_REFRESH_EXPIRE || '7d',
+    expire: (process.env.JWT_EXPIRE || '15m') as string,
+    refreshExpire: (process.env.JWT_REFRESH_EXPIRE || '7d') as string,
   },
   bcrypt: {
     saltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10),

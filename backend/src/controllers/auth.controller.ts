@@ -172,7 +172,7 @@ export const refreshToken = async (req: Request, res: Response) => {
   }
 };
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (_req: Request, res: Response) => {
   try {
     res.json({ message: 'Logout successful' });
   } catch (error) {
