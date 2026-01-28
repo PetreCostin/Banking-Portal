@@ -65,6 +65,7 @@ class TwoFactorAuthService {
 
   /**
    * Encrypt backup codes for storage
+   * Returns new array of encrypted code objects without mutating input
    */
   encryptBackupCodes(codes) {
     return codes.map(code => {
@@ -80,6 +81,8 @@ class TwoFactorAuthService {
 
   /**
    * Verify backup code
+   * Note: This method marks codes as used by setting the 'used' flag.
+   * The caller is responsible for persisting this change to the database.
    */
   verifyBackupCode(encryptedCodes, providedCode) {
     for (const encryptedCode of encryptedCodes) {

@@ -9,7 +9,17 @@ const securityConfig = require('../config/security');
 class EncryptionService {
   constructor() {
     // Use environment variable or generate a key (in production, always use env)
-    this.encryptionKey = securityConfig.encryption.key || this.generateKey();
+    this.encryptionKey = securityConfig.encryption.key;
+    
+    // Validate encryption key
+    if (!this.encryptionKey || this.encryptionKey.length !== 64) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('ENCRYPTION_KEY must be exactly 64 hex characters (32 bytes) in production');
+      }
+      console.warn('WARNING: Using auto-generated encryption key. Set ENCRYPTION_KEY in .env for production!');
+      this.encryptionKey = this.generateKey();
+    }
+    
     this.algorithm = securityConfig.encryption.algorithm;
   }
 

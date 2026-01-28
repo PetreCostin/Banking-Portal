@@ -11,6 +11,11 @@ class FraudDetectionService {
   constructor() {
     this.transactionHistory = new Map(); // In production, use Redis or database
     this.suspiciousIPs = new Set();
+    
+    // Warn if in production mode about in-memory storage
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('WARNING: FraudDetectionService is using in-memory storage. For production, configure Redis or database backend for persistence across restarts and multi-instance deployments.');
+    }
   }
 
   /**

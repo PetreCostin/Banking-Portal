@@ -43,7 +43,13 @@ module.exports = {
 
   // Session Configuration
   session: {
-    secret: process.env.SESSION_SECRET || 'default-secret-change-in-production',
+    secret: (() => {
+      const secret = process.env.SESSION_SECRET;
+      if (process.env.NODE_ENV === 'production' && (!secret || secret === 'default-secret-change-in-production')) {
+        throw new Error('SESSION_SECRET must be set in production environment');
+      }
+      return secret || 'default-secret-change-in-production';
+    })(),
     maxAge: parseInt(process.env.SESSION_MAX_AGE) || 7200000, // 2 hours
     idleTimeout: parseInt(process.env.SESSION_IDLE_TIMEOUT) || 900000, // 15 minutes
     cookie: {
@@ -86,7 +92,7 @@ module.exports = {
   compliance: {
     gdpr: process.env.GDPR_ENABLED === 'true',
     pciDss: process.env.PCI_DSS_MODE === 'true',
-    logRetentionDays: 2555, // ~7 years for financial data
+    logRetentionDays: 2557, // 7 years (accounting for leap years)
   },
 
   // Fraud Detection

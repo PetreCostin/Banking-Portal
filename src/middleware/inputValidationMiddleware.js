@@ -56,10 +56,15 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Sanitize all string inputs to prevent XSS
+// Sanitize inputs for display/storage (NOT for password verification)
+// Note: This should be applied selectively, not to password fields
 const sanitizeInputs = (req, res, next) => {
   if (req.body) {
     Object.keys(req.body).forEach(key => {
+      // Skip password fields to avoid breaking authentication
+      if (key.toLowerCase().includes('password')) {
+        return;
+      }
       if (typeof req.body[key] === 'string') {
         req.body[key] = validator.escape(req.body[key]);
       }
